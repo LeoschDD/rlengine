@@ -8,10 +8,12 @@ namespace rle
     class NodeRegistry
     {
     private:
-        std::unordered_map<std::string, std::function<std::unique_ptr<Node>()>> node_factories_;
+        using NodeFactory = std::function<std::unique_ptr<Node>()>;
+        std::unordered_map<std::string, NodeFactory> node_factories_;
     
     public:
-        void Register(const std::string& name, const std::function<std::unique_ptr<Node>>& node_factory);
+        void RegisterType(const std::string& name, const NodeFactory& node_factory);
         std::unique_ptr<Node> CreateNode(const std::string& name) const;
+        bool HasType(const std::string& name) {return node_factories_.contains(name);}
     };
 }

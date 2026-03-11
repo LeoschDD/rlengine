@@ -21,6 +21,8 @@ namespace rle
         void Render();
 
     protected:
+        virtual void Serialize();
+        virtual void Deserialize();
 
     public:
     };

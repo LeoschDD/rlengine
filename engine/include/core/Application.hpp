@@ -2,6 +2,8 @@
 
 #include "core/Headers.hpp"
 #include "core/Log.hpp"
+#include "scene/SceneTree.hpp"
+#include "nodes/NodeRegistry.hpp"
 
 namespace rle
 {
@@ -10,8 +12,12 @@ namespace rle
     private:
         bool running_{false};
         
+        SceneTree scene_tree_;
+        NodeRegistry node_registry_;
+
     private:
         bool Init();
+        void RegisterDefaultNodeTypes();
 
     protected:
         virtual bool OnInit() {return true;}

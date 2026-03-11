@@ -18,6 +18,11 @@ bool rle::Application::Init()
     return OnInit();
 }
 
+void rle::Application::RegisterDefaultNodeTypes()
+{
+    node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
+}
+
 rle::Application::Application()
 {
     if (!Init()) 

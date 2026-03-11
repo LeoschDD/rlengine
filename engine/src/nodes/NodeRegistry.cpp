@@ -1,10 +1,9 @@
 #include "nodes/NodeRegistry.hpp"
 #include "core/Log.hpp"
 
-void rle::NodeRegistry::Register(const std::string& name, const std::function<std::unique_ptr<Node>>& node_factory)
+void rle::NodeRegistry::RegisterType(const std::string& name, const NodeFactory& node_factory)
 {
-    auto it = node_factories_.find(name);
-    if (it != node_factories_.end())
+    if (node_factories_.contains(name))
     {
         RLE_CORE_WARN("already registered node factory with the name {}", name);
         return;

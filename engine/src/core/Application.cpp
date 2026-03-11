@@ -15,12 +15,14 @@ bool rle::Application::Init()
     {
         RLE_CORE_TRACE("initialized window");
     }
+    RegisterNodeTypes();
     return OnInit();
 }
 
-void rle::Application::RegisterDefaultNodeTypes()
+void rle::Application::RegisterNodeTypes()
 {
     node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
+    RegisterCustomNodeTypes(node_registry_);
 }
 
 rle::Application::Application()

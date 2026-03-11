@@ -17,7 +17,7 @@ namespace rle
 
     private:
         bool Init();
-        void RegisterDefaultNodeTypes();
+        void RegisterNodeTypes();
 
     protected:
         virtual bool OnInit() {return true;}

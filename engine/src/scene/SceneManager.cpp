@@ -1,7 +1,13 @@
 #include "scene/SceneManager.hpp"
 #include "core/Log.hpp"
 
-void rle::SceneManager::LoadScene(const std::string& path)
+rle::SceneManager::SceneManager(NodeRegistry *node_registry)
+    : serializer_(node_registry) 
+{
+    CreateScene();
+}
+
+void rle::SceneManager::LoadScene(const std::string &path)
 {
     auto scene = serializer_.DeserializeFromFile(path);
     if (!scene)

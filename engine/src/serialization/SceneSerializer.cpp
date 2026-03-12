@@ -62,7 +62,7 @@ std::unique_ptr<rle::Scene> rle::SceneSerializer::DeserializeFromFile(const std:
     nlohmann::ordered_json json = nlohmann::json::parse(file);
     if (!json.contains("root"))
     {
-        RLE_CORE_ERROR("cant load scene without root", path);
+        RLE_CORE_ERROR("can't load scene without root");
         return nullptr;
     }
     std::unique_ptr<Node> root = DeserializeNode(json["root"]);

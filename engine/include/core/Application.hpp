@@ -25,7 +25,7 @@ namespace rle
 
     public:
         Application();
-        ~Application();
+        virtual ~Application();
 
         void Run();
 

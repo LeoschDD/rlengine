@@ -17,7 +17,7 @@ protected:
 public:
     ~EditorApplication()
     {
-        GetSceneManager().SaveScene(SANDBOX_DIR "/scene1.rlscene");
+        GetSceneManager().SaveScene(SANDBOX_DIR "/scenes/scene1.rlscene");
     }
 };
 

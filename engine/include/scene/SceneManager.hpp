@@ -12,11 +12,7 @@ namespace rle
         SceneSerializer serializer_;
 
     public:
-        explicit SceneManager(NodeRegistry* node_registry) 
-            : serializer_(node_registry) 
-        {
-            CreateScene();
-        }
+        explicit SceneManager(NodeRegistry* node_registry);
 
         void LoadScene(const std::string& path);
         void SaveScene(const std::string& path);

@@ -16,6 +16,6 @@ namespace rle
 
         void RegisterType(const std::string& name, const NodeFactory& node_factory);
         std::unique_ptr<Node> CreateNode(const std::string& name) const;
-        bool HasType(const std::string& name) {return node_factories_.contains(name);}
+        bool HasType(const std::string& name) const {return node_factories_.contains(name);}
     };
 }

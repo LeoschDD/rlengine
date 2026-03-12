@@ -8,7 +8,7 @@ void rle::NodeRegistry::RegisterType(const std::string& name, const NodeFactory&
         RLE_CORE_WARN("already registered node factory with the name {}", name);
         return;
     }
-    node_factories_.emplace(name, std::move(node_factory));
+    node_factories_.emplace(name, node_factory);
 }
 
 std::unique_ptr<rle::Node> rle::NodeRegistry::CreateNode(const std::string& name) const

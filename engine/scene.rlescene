@@ -1,0 +1,28 @@
+{
+    "root": {
+        "type": "Node",
+        "id": 0,
+        "name": "Root",
+        "children": [
+            {
+                "type": "Node",
+                "id": 3,
+                "name": "Node_3",
+                "children": []
+            },
+            {
+                "type": "Node",
+                "id": 1,
+                "name": "Node_1",
+                "children": [
+                    {
+                        "type": "Node",
+                        "id": 2,
+                        "name": "lol",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+}

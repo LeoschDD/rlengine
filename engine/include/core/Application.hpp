@@ -2,8 +2,8 @@
 
 #include "core/Headers.hpp"
 #include "core/Log.hpp"
-#include "scene/SceneTree.hpp"
-#include "nodes/NodeRegistry.hpp"
+#include "scene/SceneManager.hpp"
+#include "serialization/NodeRegistry.hpp"
 
 namespace rle
 {
@@ -12,8 +12,8 @@ namespace rle
     private:
         bool running_{false};
         
-        SceneTree scene_tree_;
         NodeRegistry node_registry_;
+        SceneManager scene_manager_;
 
     private:
         bool Init();
@@ -21,11 +21,14 @@ namespace rle
 
     protected:
         virtual bool OnInit() {return true;}
+        virtual void RegisterCustomNodeTypes(NodeRegistry& node_registry) {}
 
     public:
         Application();
-        ~Application() = default;
+        ~Application();
 
         void Run();
+
+        SceneManager* GetSceneManager() {return &scene_manager_;}
     };
 }

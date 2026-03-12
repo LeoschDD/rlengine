@@ -1,7 +1,7 @@
 #include <rlengine.hpp>
 #include "SandboxModule.hpp"
 
-class EditorApplication : public rle::Application
+class SandboxApplication : public rle::Application
 {
 protected:
     void RegisterCustomNodeTypes(rle::NodeRegistry& registry) override
@@ -14,8 +14,9 @@ protected:
         GetSceneManager()->SetScene(sandbox::CreateStartupScene());
         return true;
     }
+
 public:
-    ~EditorApplication()
+    ~SandboxApplication()
     {
         GetSceneManager()->SaveScene(SANDBOX_DIR "/scene1.rlscene");
     }
@@ -23,6 +24,6 @@ public:
 
 int main()
 {
-    auto editor_app = std::make_unique<EditorApplication>();
-    editor_app->Run();
+    auto sandbox_app = std::make_unique<SandboxApplication>();
+    sandbox_app->Run();
 }

@@ -1,0 +1,8 @@
+{
+    "root": {
+        "type": "Node",
+        "id": 0,
+        "name": "Root",
+        "children": []
+    }
+}

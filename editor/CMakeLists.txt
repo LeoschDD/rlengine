@@ -17,6 +17,7 @@ target_include_directories(editor
 target_link_libraries(editor
     PRIVATE
         rlengine
+        sandbox_project
 )
 
 target_compile_definitions(editor 

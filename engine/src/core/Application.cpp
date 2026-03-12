@@ -26,6 +26,7 @@ void rle::Application::RegisterNodeTypes()
 }
 
 rle::Application::Application()
+    : scene_manager_(&node_registry_)
 {
     if (!Init()) 
     {
@@ -36,6 +37,11 @@ rle::Application::Application()
         RLE_CORE_TRACE("initialization successful");
         running_ = true;
     }
+}
+
+rle::Application::~Application()
+{
+    CloseWindow();
 }
 
 void rle::Application::Run()

@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
+#include <format>
+#include <fstream>
 
 #include <raylib.h>
 #include <raymath.h>

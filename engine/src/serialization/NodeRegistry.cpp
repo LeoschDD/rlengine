@@ -1,4 +1,4 @@
-#include "nodes/NodeRegistry.hpp"
+#include "serialization/NodeRegistry.hpp"
 #include "core/Log.hpp"
 
 void rle::NodeRegistry::RegisterType(const std::string& name, const NodeFactory& node_factory)

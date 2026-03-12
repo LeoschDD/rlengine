@@ -13,7 +13,22 @@ namespace rle
 
         Node* parent_{nullptr};
         std::vector<std::unique_ptr<Node>> children_;
+
+        // std::vector<std::function<void>> queued_operations_
     
+    private:
+        // EnterTree
+        // ExitTree
+        // Ready
+
+        // Input
+        // Update
+        // Render
+
+    protected:        
+        // OnEnterTree
+        // ...
+
     public:
         Node();
         Node(const std::string& name);
@@ -22,11 +37,23 @@ namespace rle
         virtual void Deserialize(const nlohmann::ordered_json& json);
 
         void AddChild(std::unique_ptr<Node> child);
+        // RemoveChild
+        // DetatchChild
+        // SetParent
 
-        const Node* GetParent() {return parent_;}
+        // AddChildQueued
+        // RemoveChildQueued
+        // DetatchChildQueued
+        // SetParentQueued
+
+        Node* GetParent() {return parent_;}
+        const Node* GetParent() const {return parent_;}
+        std::vector<std::unique_ptr<Node>>& GetChildren() {return children_;}
         const std::vector<std::unique_ptr<Node>>& GetChildren() const {return children_;}
-        const uint32_t GetId() {return id_;}
-        const std::string& GetName() {return name_;}
+
+        uint32_t GetId() {return id_;}
+        const uint32_t GetId() const {return id_;}
+        const std::string& GetName() const {return name_;}
         virtual const std::string GetTypeName() const {return "Node";}
     };
 }

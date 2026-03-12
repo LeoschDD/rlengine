@@ -18,10 +18,9 @@ namespace rle
             CreateScene();
         }
 
-        void CreateScene() {active_scene_ = std::make_unique<Scene>();}
         void LoadScene(const std::string& path);
         void SaveScene(const std::string& path);
-
+        void CreateScene() {active_scene_ = std::make_unique<Scene>();}
         void SetScene(std::unique_ptr<Scene> scene) {active_scene_ = std::move(scene);}
         Scene* GetScene() {return active_scene_.get();}
     };

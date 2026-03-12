@@ -1,14 +1,6 @@
 #include <rlengine.hpp>
 #include "SandboxProject.hpp"
 
-class EditorApplication : public rle::Application
-{
-protected:
-
-public:
-
-};
-
 rle::Project* rle::GetProject()
 {
     static SandboxProject project;
@@ -17,6 +9,6 @@ rle::Project* rle::GetProject()
 
 int main()
 {
-    auto editor_app = std::make_unique<EditorApplication>();
-    editor_app->Run();
+    auto sandbox_app = std::make_unique<rle::Application>();
+    sandbox_app->Run();
 }

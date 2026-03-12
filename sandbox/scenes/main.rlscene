@@ -1,12 +1,13 @@
 {
+    "name": "main",
     "root": {
         "type": "Node",
-        "id": 1,
+        "id": 0,
         "name": "Root",
         "children": [
             {
                 "type": "PlayerNode",
-                "id": 2,
+                "id": 1,
                 "name": "Player",
                 "position": [
                     0.0,

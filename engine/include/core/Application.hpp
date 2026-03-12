@@ -4,6 +4,7 @@
 #include "core/Log.hpp"
 #include "scene/SceneManager.hpp"
 #include "serialization/NodeRegistry.hpp"
+#include "core/Project.hpp"
 
 namespace rle
 {
@@ -14,15 +15,11 @@ namespace rle
         
         NodeRegistry node_registry_;
         SceneManager scene_manager_;
-
+    
     private:
         bool Init();
         void RegisterNodeTypes();
-
-    protected:
-        virtual bool OnInit() {return true;}
-        virtual void RegisterCustomNodeTypes(NodeRegistry& node_registry) {}
-
+    
     public:
         Application();
         virtual ~Application();

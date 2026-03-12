@@ -36,4 +36,6 @@ target_link_libraries(rlengine
 target_compile_definitions(rlengine 
     PRIVATE
         ENGINE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+    PUBLIC
+        SCENE_DIR="${CMAKE_SOURCE_DIR}/sandbox/scenes"
 )

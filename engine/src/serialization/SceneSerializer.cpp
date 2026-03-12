@@ -39,12 +39,13 @@ std::unique_ptr<rle::Node> rle::SceneSerializer::DeserializeNode(const nlohmann:
 void rle::SceneSerializer::SerializeToFile(const Scene* scene, const std::string& path) const
 {
     nlohmann::ordered_json json;
+    json["name"] = scene->GetName();
     json["root"] = SerializeNode(scene->Root());
     std::ofstream os(path);
 
     if (!os.is_open())
     {
-        RLE_CORE_ERROR("could not open file: {}", path);
+        RLE_CORE_ERROR("failed to save scene - could not open file: {}", path);
         return;
     }
     os << json.dump(4);
@@ -56,7 +57,7 @@ std::unique_ptr<rle::Scene> rle::SceneSerializer::DeserializeFromFile(const std:
     std::ifstream file(path);
     if (!file.is_open())
     {
-        RLE_CORE_ERROR("could not open file: {}", path);
+        RLE_CORE_TRACE("scene does not exist: {}", path);
         return nullptr;
     }
     nlohmann::ordered_json json = nlohmann::json::parse(file);
@@ -65,11 +66,12 @@ std::unique_ptr<rle::Scene> rle::SceneSerializer::DeserializeFromFile(const std:
         RLE_CORE_ERROR("can't load scene without root");
         return nullptr;
     }
+    std::string name = json["name"].get<std::string>();
     std::unique_ptr<Node> root = DeserializeNode(json["root"]);
     if (!root)
     {
         RLE_CORE_ERROR("failed to deserialize root");
         return nullptr;
     }
-    return std::make_unique<Scene>(std::move(root));
+    return std::make_unique<Scene>(std::move(root), name);
 }

@@ -5,7 +5,7 @@ uint32_t rle::Node::next_id_ = 0;
 rle::Node::Node()
     : id_(next_id_++)
 {
-    name_ = std::format("{}_{}", GetTypeName(), id_);
+    name_ = std::format("Node_{}", id_);
 }
 
 rle::Node::Node(const std::string& name)

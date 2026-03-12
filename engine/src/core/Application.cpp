@@ -15,14 +15,31 @@ bool rle::Application::Init()
     {
         RLE_CORE_TRACE("initialized window");
     }
+
+    auto project = GetProject();
+
     RegisterNodeTypes();
-    return OnInit();
+    project->RegisterNodeTypes(node_registry_);
+    
+    if (!GetSceneManager().LoadScene(project->GetStartupScenePath()))
+    {
+        RLE_CORE_INFO("cant load scene - creating startup scene");
+        auto scene = project->CreateStartupScene();
+        if (!scene)
+        {
+            GetSceneManager().CreateDefaultScene();
+        }
+        else
+        {
+            GetSceneManager().SetScene(std::move(scene));
+        }
+    }
+    return true;
 }
 
 void rle::Application::RegisterNodeTypes()
 {
     node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
-    RegisterCustomNodeTypes(node_registry_);
 }
 
 rle::Application::Application()
@@ -31,6 +48,7 @@ rle::Application::Application()
 
 rle::Application::~Application()
 {
+    GetSceneManager().SaveScene(SCENE_DIR "/" + GetSceneManager().GetScene()->GetName() + ".rlscene");
     CloseWindow();
 }
 

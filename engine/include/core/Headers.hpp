@@ -6,6 +6,8 @@
 #include <functional>
 #include <format>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 
 #include <raylib.h>
 #include <raymath.h>

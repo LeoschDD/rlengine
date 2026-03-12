@@ -23,7 +23,7 @@ namespace rle
         Node* parent_{nullptr};
         std::vector<std::unique_ptr<Node>> children_;
 
-        std::vector<std::function<void>> queued_operations_;
+        std::vector<std::function<void()>> queued_operations_;
     
     private:
         void EnterTree();

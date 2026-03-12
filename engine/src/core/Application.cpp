@@ -80,8 +80,16 @@ void rle::Application::Run()
             running_ = false;
             break;
         }
+        const float dt = GetFrameTime();
+
+        GetSceneManager().ProcessInput();
+        GetSceneManager().ProcessUpdate(dt);
+
         BeginDrawing();
         ClearBackground(WHITE);
+
+        GetSceneManager().ProcessRender();
+         
         EndDrawing();
     }
 }

@@ -50,6 +50,7 @@ namespace rle
         virtual void OnUpdate(const float dt) {}
         virtual void OnRender() {}
         
+        virtual void OnHierarchyChanged() {}
     public:
         Node();
         Node(const std::string& name);

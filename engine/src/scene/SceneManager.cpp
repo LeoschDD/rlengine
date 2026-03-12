@@ -35,7 +35,7 @@ void rle::SceneManager::OnActivateScene()
 
 void rle::SceneManager::OnDeactivateScene()
 {
-        if (active_scene_ && active_scene_->Root())
+    if (active_scene_ && active_scene_->Root())
     {
         active_scene_->Root()->ExitTree();
     }

@@ -24,6 +24,9 @@ namespace rle
         bool Init();
         void RegisterNodeTypes();
     
+    protected:
+        virtual void ProcessEditor() {}
+
     public:
         Application();
         virtual ~Application();

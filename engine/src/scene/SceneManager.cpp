@@ -22,6 +22,8 @@ void rle::SceneManager::ProcessRender()
     if (active_scene_ && active_scene_->Root())
     {
         active_scene_->Root()->Render();
+        active_scene_->Root()->Render2D();
+        active_scene_->Root()->Render3D();
     }
 }
 

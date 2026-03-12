@@ -31,6 +31,8 @@ namespace rle
         void Input();
         void Update(const float dt);
         void Render();
+        void Render2D();
+        void Render3D();
 
         [[nodiscard]] bool HasAncestor(const Node* ancestor) const;
         void FlushQueuedOperations();
@@ -42,6 +44,8 @@ namespace rle
         virtual void InputInternal() {}
         virtual void UpdateInternal(const float dt) {}
         virtual void RenderInternal() {}
+        virtual void Render2DInternal() {}
+        virtual void Render3DInternal() {}
 
         virtual void OnEnterTree() {}
         virtual void OnExitTree() {}
@@ -49,6 +53,8 @@ namespace rle
         virtual void OnInput() {}
         virtual void OnUpdate(const float dt) {}
         virtual void OnRender() {}
+        virtual void OnRender2D() {}
+        virtual void OnRender3D() {}
         
         virtual void OnHierarchyChanged() {}
     public:

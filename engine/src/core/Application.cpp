@@ -17,6 +17,9 @@ bool rle::Application::Init()
     {
         RLE_CORE_TRACE("initialized window");
     }
+    SetTargetFPS(60);
+
+    rlImGuiSetup(true);
 
     auto project = GetProject();
 
@@ -86,8 +89,9 @@ void rle::Application::Run()
         GetSceneManager().ProcessUpdate(dt);
 
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(SKYBLUE);
 
+        ProcessEditor();
         GetSceneManager().ProcessRender();
          
         EndDrawing();

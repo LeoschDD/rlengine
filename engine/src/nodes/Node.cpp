@@ -115,6 +115,42 @@ void rle::Node::Render()
     FlushQueuedOperations();
 }
 
+void rle::Node::Render2D()
+{
+    if (!active_) return;
+
+    processing_ = true;
+
+    Render2DInternal();
+    OnRender2D();
+
+    for (auto& child : children_)
+    {
+        child->Render2D();
+    }
+
+    processing_ = false;
+    FlushQueuedOperations();
+}
+
+void rle::Node::Render3D()
+{
+    if (!active_) return;
+
+    processing_ = true;
+
+    Render3DInternal();
+    OnRender3D();
+
+    for (auto& child : children_)
+    {
+        child->Render3D();
+    }
+
+    processing_ = false;
+    FlushQueuedOperations();
+}
+
 bool rle::Node::HasAncestor(const Node* ancestor) const
 {
     const Node* current = parent_;

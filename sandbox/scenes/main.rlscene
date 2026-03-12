@@ -14,6 +14,32 @@
                     0.0,
                     0.0
                 ],
+                "children": [
+                    {
+                        "type": "Node",
+                        "id": 2,
+                        "name": "Node_2",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "type": "Node",
+                "id": 3,
+                "name": "Node_3",
+                "children": [
+                    {
+                        "type": "Node",
+                        "id": 5,
+                        "name": "Node_5",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "type": "Node",
+                "id": 4,
+                "name": "Node_4",
                 "children": []
             }
         ]

@@ -47,10 +47,37 @@ void rle::Application::RegisterNodeTypes()
     node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
 }
 
+void rle::Application::Input()
+{
+    GetSceneManager().ProcessInput();
+}
+
+void rle::Application::Update()
+{
+    const float dt = GetFrameTime();
+    GetSceneManager().ProcessUpdate(dt);
+}
+
+void rle::Application::Render()
+{
+    BeginDrawing();
+    ClearBackground(SKYBLUE);
+    GetSceneManager().ProcessRender();
+    EndDrawing();
+}
+
 rle::Application::Application()
     : scene_manager_(&node_registry_)
 {
     instance_ = this;
+
+    if (!Init())
+    {
+        RLE_CORE_ERROR("initialization failed");
+        return;
+    }
+    RLE_CORE_TRACE("initialization successful");
+    running_ = true;
 }
 
 rle::Application::~Application()
@@ -65,17 +92,6 @@ rle::Application::~Application()
 
 void rle::Application::Run()
 {
-    if (!running_)
-    {
-        if (!Init())
-        {
-            RLE_CORE_ERROR("initialization failed");
-            return;
-        }
-        RLE_CORE_TRACE("initialization successful");
-        running_ = true;
-    }
-
     while (running_)
     {
         if (WindowShouldClose()) 
@@ -85,15 +101,8 @@ void rle::Application::Run()
         }
         const float dt = GetFrameTime();
 
-        GetSceneManager().ProcessInput();
-        GetSceneManager().ProcessUpdate(dt);
-
-        BeginDrawing();
-        ClearBackground(SKYBLUE);
-
-        ProcessEditor();
-        GetSceneManager().ProcessRender();
-         
-        EndDrawing();
+        Input();
+        Update();
+        Render();
     }
 }

@@ -25,7 +25,9 @@ namespace rle
         void RegisterNodeTypes();
     
     protected:
-        virtual void ProcessEditor() {}
+        virtual void Input();
+        virtual void Update();
+        virtual void Render();
 
     public:
         Application();

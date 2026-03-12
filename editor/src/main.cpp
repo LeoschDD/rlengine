@@ -3,12 +3,37 @@
 
 class EditorApplication : public rle::Application
 {
+private:
+    RenderTexture2D viewport_{};
+    bool initialized_{false};
 protected:
-    void ProcessEditor() override
+    void Render() override
     {
+        if (!initialized_)
+        {
+            viewport_ = LoadRenderTexture(1280, 720);
+            initialized_ = true;
+        }
+        ClearBackground(DARKGRAY);
+        
         rlImGuiBegin();
+        BeginTextureMode(viewport_);
+        rle::Application::Render();
+        EndTextureMode();
+        bool open = true;
 
+        if (ImGui::Begin("Viewport"))
+        {
+            ImVec2 avail = ImGui::GetContentRegionAvail();
 
+            ImGui::Image(
+                (ImTextureID)(uintptr_t)viewport_.texture.id,
+                avail,
+                ImVec2(0, 1),
+                ImVec2(1, 0)
+            );
+        }
+        ImGui::End();
         DrawNodeTree();
 		rlImGuiEnd();
     };
@@ -38,6 +63,12 @@ protected:
             }
             ImGui::TreePop();
         }
+    }
+
+public:
+    ~EditorApplication() override
+    {
+        UnloadRenderTexture(viewport_);
     }
 };
 

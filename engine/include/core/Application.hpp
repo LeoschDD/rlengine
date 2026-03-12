@@ -29,6 +29,6 @@ namespace rle
 
         void Run();
 
-        SceneManager* GetSceneManager() {return &scene_manager_;}
+        SceneManager& GetSceneManager() {return scene_manager_;}
     };
 }

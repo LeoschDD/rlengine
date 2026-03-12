@@ -11,13 +11,13 @@ protected:
 
     bool OnInit() override
     {
-        GetSceneManager()->SetScene(sandbox::CreateStartupScene());
+        GetSceneManager().SetScene(sandbox::CreateStartupScene());
         return true;
     }
 public:
     ~EditorApplication()
     {
-        GetSceneManager()->SaveScene(SANDBOX_DIR "/scene1.rlscene");
+        GetSceneManager().SaveScene(SANDBOX_DIR "/scene1.rlscene");
     }
 };
 

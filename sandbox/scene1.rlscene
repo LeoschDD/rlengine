@@ -1,8 +1,20 @@
 {
     "root": {
         "type": "Node",
-        "id": 0,
+        "id": 1,
         "name": "Root",
-        "children": []
+        "children": [
+            {
+                "type": "PlayerNode",
+                "id": 2,
+                "name": "Player",
+                "position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "children": []
+            }
+        ]
     }
 }

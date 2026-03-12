@@ -27,17 +27,7 @@ void rle::Application::RegisterNodeTypes()
 
 rle::Application::Application()
     : scene_manager_(&node_registry_)
-{
-    if (!Init()) 
-    {
-        RLE_CORE_ERROR("initialization failed");
-    }
-    else
-    {
-        RLE_CORE_TRACE("initialization successful");
-        running_ = true;
-    }
-}
+{}
 
 rle::Application::~Application()
 {
@@ -46,6 +36,17 @@ rle::Application::~Application()
 
 void rle::Application::Run()
 {
+    if (!running_)
+    {
+        if (!Init())
+        {
+            RLE_CORE_ERROR("initialization failed");
+            return;
+        }
+        RLE_CORE_TRACE("initialization successful");
+        running_ = true;
+    }
+
     while (running_)
     {
         if (WindowShouldClose()) 

@@ -7,7 +7,7 @@ nlohmann::ordered_json rle::SceneSerializer::SerializeNode(const Node* node) con
     node->Serialize(json);
 
     json["children"] = nlohmann::json::array();
-    for (auto& child : node->GetChildren())
+    for (const auto& child : node->GetChildren())
     {
         json["children"].push_back(SerializeNode(child.get()));    
     }

@@ -11,7 +11,7 @@ public:
         registry.RegisterType("PlayerNode", [](){return std::make_unique<PlayerNode>();});
     }
 
-    const std::string GetStartupScenePath() const override
+    std::string GetStartupScenePath() const override
     {
         return std::format(SCENE_DIR "/main.rlscene");
     }

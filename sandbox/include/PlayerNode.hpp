@@ -19,5 +19,5 @@ public:
         position.y = json["position"][1];
         position.z = json["position"][2];
     }
-    const std::string GetTypeName() const override {return "PlayerNode";}
+    std::string GetTypeName() const override {return "PlayerNode";}
 };  

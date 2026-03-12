@@ -4,11 +4,27 @@
 
 namespace rle
 {
+    struct ShaderDeleter
+    {
+        void operator()(Shader* s) const
+        {
+            if (s) {UnloadShader(*s); delete s;}
+        }
+    };
+
+    struct TextureDeleter
+    {
+        void operator()(Texture* t) const
+        {
+            if (t) {UnloadTexture(*t); delete t;}
+        }
+    };
+
     class ResourceManager
     {
     private:
-        std::unordered_map<std::string, std::unique_ptr<Shader>> shaders_;
-        std::unordered_map<std::string, std::unique_ptr<Texture>> textures_;
+        std::unordered_map<std::string, std::unique_ptr<Shader, ShaderDeleter>> shaders_;
+        std::unordered_map<std::string, std::unique_ptr<Texture, TextureDeleter>> textures_;
 
     public:
         ResourceManager() = default;

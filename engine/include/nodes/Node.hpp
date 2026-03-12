@@ -52,9 +52,9 @@ namespace rle
         // node* GetChild(id)
         // node* GetChild(name)
 
-        uint32_t GetId() {return id_;}
+        uint32_t GetId() const {return id_;}
         const std::string& GetName() const {return name_;}
-        virtual const std::string GetTypeName() const {return "Node";}
+        virtual std::string GetTypeName() const {return "Node";}
 
         Node* GetParent() {return parent_;}
         const Node* GetParent() const {return parent_;}

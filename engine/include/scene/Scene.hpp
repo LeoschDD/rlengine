@@ -4,8 +4,6 @@
 
 namespace rle
 {
-    class SceneManager;
-
     class Scene
     {
     private:

@@ -1,5 +1,7 @@
 #include "core/Application.hpp"
 
+rle::Application* rle::Application::instance_ = nullptr; 
+
 bool rle::Application::Init()
 {
     rle::Log::Init();
@@ -23,7 +25,7 @@ bool rle::Application::Init()
     
     if (!GetSceneManager().LoadScene(project->GetStartupScenePath()))
     {
-        RLE_CORE_INFO("cant load scene - creating startup scene");
+        RLE_CORE_INFO("can't load scene - creating startup scene");
         auto scene = project->CreateStartupScene();
         if (!scene)
         {
@@ -44,12 +46,18 @@ void rle::Application::RegisterNodeTypes()
 
 rle::Application::Application()
     : scene_manager_(&node_registry_)
-{}
+{
+    instance_ = this;
+}
 
 rle::Application::~Application()
 {
-    GetSceneManager().SaveScene(SCENE_DIR "/" + GetSceneManager().GetScene()->GetName() + ".rlscene");
+    if (auto* scene = GetSceneManager().GetScene())
+    {
+        GetSceneManager().SaveScene(SCENE_DIR "/" + scene->GetName() + ".rlscene");
+    }
     CloseWindow();
+    instance_ = nullptr;
 }
 
 void rle::Application::Run()

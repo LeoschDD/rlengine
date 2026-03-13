@@ -9,6 +9,8 @@
 #include "nodes/2D/Node2D.hpp"
 #include "nodes/3D/Node3D.hpp"
 #include "nodes/3D/NodeMesh3D.hpp"
+#include "nodes/2D/NodeCamera2D.hpp"
+#include "nodes/3D/NodeCamera3D.hpp"
 
 namespace rle
 {

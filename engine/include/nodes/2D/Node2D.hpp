@@ -23,7 +23,6 @@ namespace rle
     public:
         void Serialize(nlohmann::ordered_json& json) const override;
         void Deserialize(const nlohmann::ordered_json& json) override;
-
         std::string GetTypeName() const override {return "Node2D";}
 
         void SetTransform(Transform2D transform) {local_transform_ = transform; MarkTransformDirty();}

@@ -7,6 +7,7 @@ bool rle::Application::Init()
     rle::Log::Init();
     RLE_CORE_TRACE("initialized log");
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1920, 1080, "Sandbox");
     if (!IsWindowReady()) 
     {
@@ -48,6 +49,8 @@ void rle::Application::RegisterNodeTypes()
     node_registry_.RegisterType("Node2D", [](){return std::make_unique<Node2D>();});
     node_registry_.RegisterType("Node3D", [](){return std::make_unique<Node3D>();});
     node_registry_.RegisterType("NodeMesh3D", [](){return std::make_unique<NodeMesh3D>();});
+    node_registry_.RegisterType("NodeCamera3D", [](){return std::make_unique<NodeCamera3D>();});
+    node_registry_.RegisterType("NodeCamera2D", [](){return std::make_unique<NodeCamera2D>();});
 }
 
 void rle::Application::Input()

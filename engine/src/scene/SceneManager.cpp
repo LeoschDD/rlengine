@@ -1,5 +1,7 @@
 #include "scene/SceneManager.hpp"
 #include "core/Log.hpp"
+#include "nodes/3D/NodeCamera3D.hpp"
+#include "nodes/2D/NodeCamera2D.hpp"
 
 void rle::SceneManager::ProcessInput()
 {
@@ -22,11 +24,21 @@ void rle::SceneManager::ProcessRender()
     if (active_scene_ && active_scene_->Root())
     {
         active_scene_->Root()->Render();
-        active_scene_->Root()->Render2D();
 
-        BeginMode3D(camera_3d_);
-        active_scene_->Root()->Render3D();
-        EndMode3D();    
+        if (!active_camera_) return;
+        if (rle::NodeCamera2D* camera_2d = dynamic_cast<rle::NodeCamera2D*>(active_camera_))
+        {
+            BeginMode2D(camera_2d->GetCamera());
+            active_scene_->Root()->Render2D();
+            EndMode2D();
+        }
+        else if (rle::NodeCamera3D* camera_3d = dynamic_cast<rle::NodeCamera3D*>(active_camera_))
+        {
+            BeginMode3D(camera_3d->GetCamera());
+            DrawGrid(5000, 5);
+            active_scene_->Root()->Render3D();
+            EndMode3D();
+        }
     }
 }
 
@@ -85,4 +97,37 @@ void rle::SceneManager::SetScene(std::unique_ptr<Scene> scene)
     }
     active_scene_ = std::move(scene);
     OnActivateScene();
+}
+
+void rle::SceneManager::SetActiveCamera(Node* camera)
+{
+    if (!dynamic_cast<rle::NodeCamera2D*>(camera) && 
+        !dynamic_cast<rle::NodeCamera3D*>(camera) && camera)
+    {
+        RLE_CORE_WARN("failed to set camera - node is no camera");
+        return;
+    }
+    if (active_camera_)
+    {
+        if (rle::NodeCamera2D* camera_2d = dynamic_cast<rle::NodeCamera2D*>(active_camera_))
+        {
+            camera_2d->SetCurrent(false);
+        }
+        else if (rle::NodeCamera3D* camera_3d = dynamic_cast<rle::NodeCamera3D*>(active_camera_))
+        {
+            camera_3d->SetCurrent(false);
+        }
+    }
+    active_camera_ = camera;
+    if (active_camera_)
+    {
+        if (rle::NodeCamera2D* camera_2d = dynamic_cast<rle::NodeCamera2D*>(active_camera_))
+        {
+            camera_2d->SetCurrent(true);
+        }
+        else if (rle::NodeCamera3D* camera_3d = dynamic_cast<rle::NodeCamera3D*>(active_camera_))
+        {
+            camera_3d->SetCurrent(true);
+        }
+    }
 }

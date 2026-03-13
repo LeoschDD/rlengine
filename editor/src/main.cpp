@@ -304,6 +304,14 @@ protected:
                     float scl[3] = {transform.scale.x, transform.scale.y, transform.scale.z};
                     if (ImGui::DragFloat3("Scale", scl, 0.1f))
                         node3d->SetScale({scl[0], scl[1], scl[2]});
+
+                    if (auto* camera_3d = dynamic_cast<rle::NodeCamera3D*>(selected_node_))
+                    {
+                        if (ImGui::Button("Activate"))
+                        {
+                            rle::Application::Get().GetSceneManager().SetActiveCamera(camera_3d);
+                        }
+                    }
                 }
 
                 if (auto* node2d = dynamic_cast<rle::Node2D*>(selected_node_))
@@ -321,6 +329,14 @@ protected:
                     float scl[2] = {transform.scale.x, transform.scale.y};
                     if (ImGui::DragFloat2("Scale", scl, 0.1f))
                         node2d->SetScale({scl[0], scl[1]});
+
+                    if (auto* camera_2d = dynamic_cast<rle::NodeCamera2D*>(selected_node_))
+                    {
+                        if (ImGui::Button("Activate"))
+                        {
+                            rle::Application::Get().GetSceneManager().SetActiveCamera(camera_2d);
+                        }
+                    }
                 }
             }
             else

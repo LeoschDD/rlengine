@@ -15,14 +15,8 @@ namespace rle
         std::unique_ptr<Scene> active_scene_{nullptr};
         SceneSerializer serializer_;
         
-        Camera3D camera_3d_ = {
-            .position = {0.0f, 10.0f, -10.0f},
-            .target = {0.0f, 0.0f, 0.0f},
-            .up = {0.0f, 1.0f, 0.0f},
-            .fovy = 60.0f,
-            .projection = CAMERA_PERSPECTIVE 
-        };
-     
+        Node* active_camera_{nullptr};
+
     private:
         void ProcessInput();
         void ProcessUpdate(const float dt);
@@ -42,5 +36,6 @@ namespace rle
 
         void SetScene(std::unique_ptr<Scene> scene);
         Scene* GetScene() {return active_scene_.get();}
+        void SetActiveCamera(Node* camera);
     };
 }

@@ -29,7 +29,7 @@ namespace rle
     
     protected:
         virtual void Input();
-        virtual void Update();
+        virtual void Update(const float dt);
         virtual void Render();
 
     public:

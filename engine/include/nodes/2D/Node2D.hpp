@@ -21,10 +21,10 @@ namespace rle
         void OnHierarchyChanged() override {MarkTransformDirty();}
 
     public:
-        virtual void Serialize(nlohmann::ordered_json& json) const;
-        virtual void Deserialize(const nlohmann::ordered_json& json);
+        void Serialize(nlohmann::ordered_json& json) const override;
+        void Deserialize(const nlohmann::ordered_json& json) override;
 
-        virtual std::string GetTypeName() const override {return "Node2D";}
+        std::string GetTypeName() const override {return "Node2D";}
 
         void SetTransform(Transform2D transform) {local_transform_ = transform; MarkTransformDirty();}
         void SetPosition(Vector2 position) {local_transform_.translation = position; MarkTransformDirty();}

@@ -55,9 +55,8 @@ void rle::Application::Input()
     GetSceneManager().ProcessInput();
 }
 
-void rle::Application::Update()
+void rle::Application::Update(const float dt)
 {
-    const float dt = GetFrameTime();
     GetSceneManager().ProcessUpdate(dt);
 }
 
@@ -105,7 +104,7 @@ void rle::Application::Run()
         const float dt = GetFrameTime();
 
         Input();
-        Update();
+        Update(dt);
 
         BeginDrawing();
         Render();

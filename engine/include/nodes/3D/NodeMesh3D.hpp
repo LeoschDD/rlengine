@@ -16,7 +16,7 @@ namespace rle
     public:
         ~NodeMesh3D();
 
-        virtual std::string GetTypeName() const override {return "NodeMesh3D";}
+        std::string GetTypeName() const override {return "NodeMesh3D";}
 
         Mesh& GetMesh() {return mesh_;}
         void SetMesh(const Mesh& mesh) {UnloadMesh(mesh_); mesh_ = mesh;}

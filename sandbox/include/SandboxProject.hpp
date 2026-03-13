@@ -20,7 +20,6 @@ public:
     std::unique_ptr<rle::Scene> CreateStartupScene() override
     {
         auto scene = std::make_unique<rle::Scene>("main");
-        scene->Root()->AddChild(std::make_unique<PlayerNode>());
         return scene;
     }
 };

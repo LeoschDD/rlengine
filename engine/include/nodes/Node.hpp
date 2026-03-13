@@ -85,6 +85,7 @@ namespace rle
 
         uint32_t GetId() const {return id_;}
         const std::string& GetName() const {return name_;}
+        void SetName(const std::string& name) {name_ = name;}
         virtual std::string GetTypeName() const {return "Node";}
 
         Node* GetParent() {return parent_;}

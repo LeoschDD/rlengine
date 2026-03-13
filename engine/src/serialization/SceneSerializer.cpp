@@ -16,11 +16,16 @@ nlohmann::ordered_json rle::SceneSerializer::SerializeNode(const Node* node) con
 
 std::unique_ptr<rle::Node> rle::SceneSerializer::DeserializeNode(const nlohmann::ordered_json& json)
 {
+    if (!json.contains("type"))
+    {
+        RLE_CORE_WARN("failed to load node - type not found");
+        return nullptr;
+    }
     const std::string type = json["type"].get<std::string>();
     std::unique_ptr<Node> node = node_registry_->CreateNode(type);
     if (!node) 
     {
-        RLE_CORE_WARN("failed to deserialize node");
+        RLE_CORE_WARN("failed to load node");
         return nullptr;
     }
     node->Deserialize(json);
@@ -60,7 +65,16 @@ std::unique_ptr<rle::Scene> rle::SceneSerializer::DeserializeFromFile(const std:
         RLE_CORE_TRACE("scene does not exist: {}", path);
         return nullptr;
     }
-    nlohmann::ordered_json json = nlohmann::json::parse(file);
+    nlohmann::ordered_json json;
+    try
+    {
+        json = nlohmann::json::parse(file);
+    } 
+    catch (const nlohmann::json::parse_error& e)
+    {
+        RLE_CORE_ERROR("failed to parse scene file: {}", e.what());
+        return nullptr;
+    }
     if (!json.contains("root"))
     {
         RLE_CORE_ERROR("can't load scene without root");

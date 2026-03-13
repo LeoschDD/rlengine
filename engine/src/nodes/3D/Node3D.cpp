@@ -1,4 +1,5 @@
 #include "nodes/3D/Node3D.hpp"
+#include "core/Log.hpp"
 
 void rle::Node3D::MarkTransformDirty()
 {
@@ -44,8 +45,10 @@ void rle::Node3D::UpdateGlobalTransform()
 
 void rle::Node3D::Serialize(nlohmann::ordered_json &json) const
 {
+    Node::Serialize(json);
+
     Vector3 pos = local_transform_.translation;
-    json["postion"] = {pos.x, pos.y, pos.z};
+    json["position"] = {pos.x, pos.y, pos.z};
 
     Quaternion rotation = local_transform_.rotation;
     json["rotation"] = {rotation.x, rotation.y, rotation.z, rotation.w};
@@ -56,20 +59,43 @@ void rle::Node3D::Serialize(nlohmann::ordered_json &json) const
 
 void rle::Node3D::Deserialize(const nlohmann::ordered_json &json)
 {
-    auto pos = json["position"];
-    if (pos.size() == 3)
+    Node::Deserialize(json);
+
+    if (json.contains("position"))
     {
-        local_transform_.translation = {pos[0], pos[1], pos[2]};        
+        auto pos = json["position"];
+        if (pos.size() == 3)
+        {
+            local_transform_.translation = {pos[0], pos[1], pos[2]};        
+        }
     }
-    auto rotation = json["rotation"];
-    if (rotation.size() == 4)
+    else
     {
-        local_transform_.rotation = {rotation[0], rotation[1], rotation[2], rotation[3]};        
+        RLE_CORE_WARN("failed to load node - position not found");
     }
-    auto scale = json["scale"];
-    if (scale.size() == 3)
+    if (json.contains("rotation"))
     {
-        local_transform_.scale = {scale[0], scale[1], scale[2]};
+        auto rotation = json["rotation"];
+        if (rotation.size() == 4)
+        {
+            local_transform_.rotation = {rotation[0], rotation[1], rotation[2], rotation[3]};        
+        }
+    }
+    else
+    {
+        RLE_CORE_WARN("failed to load node - rotation not found");
+    }
+    if (json.contains("scale"))
+    {
+        auto scale = json["scale"];
+        if (scale.size() == 3)
+        {
+            local_transform_.scale = {scale[0], scale[1], scale[2]};
+        }
+    }
+    else
+    {
+        RLE_CORE_WARN("failed to load node - scale not found");
     }
 }
 

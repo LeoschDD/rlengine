@@ -184,8 +184,22 @@ void rle::Node::Serialize(nlohmann::ordered_json& json) const
 
 void rle::Node::Deserialize(const nlohmann::ordered_json& json)
 {
-    id_ = json["id"].get<uint32_t>();
-    name_ = json["name"].get<std::string>();
+    if (json.contains("id"))
+    {
+        id_ = json["id"].get<uint32_t>();
+    }
+    else
+    {
+        RLE_CORE_ERROR("failed to load node - id not found");
+    }
+    if (json.contains("name"))
+    {
+        name_ = json["name"].get<std::string>();
+    }
+    else
+    {
+        RLE_CORE_ERROR("failed to load node - name not found");
+    }
     next_id_ = std::max(id_ + 1, next_id_);
 }
 

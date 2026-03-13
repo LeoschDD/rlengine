@@ -1,4 +1,5 @@
 #include "nodes/2D/Node2D.hpp"
+#include "core/Log.hpp"
 
 void rle::Node2D::MarkTransformDirty()
 {
@@ -42,6 +43,58 @@ void rle::Node2D::UpdateGlobalTransform()
         global_transform_ = local_transform_;
     }
     transform_dirty_ = false;
+}
+
+void rle::Node2D::Serialize(nlohmann::ordered_json &json) const
+{
+    Node::Serialize(json);
+
+    Vector2 pos = local_transform_.translation;
+    json["position"] = {pos.x, pos.y};
+
+    float rotation = local_transform_.rotation;
+    json["rotation"] = rotation;
+
+    Vector2 scale = local_transform_.scale;
+    json["scale"] = {scale.x, scale.y};
+}
+
+void rle::Node2D::Deserialize(const nlohmann::ordered_json &json)
+{
+    Node::Deserialize(json);
+
+    if (json.contains("position"))
+    {
+        auto pos = json["position"];
+        if (pos.size() == 2)
+        {
+            local_transform_.translation = {pos[0], pos[1]};        
+        }        
+    }
+    else
+    {
+        RLE_CORE_WARN("failed to load node - position not found");
+    }
+    if (json.contains("rotation"))
+    {
+        local_transform_.rotation = json["rotation"].get<float>();
+    }
+    else
+    {
+        RLE_CORE_WARN("failed to load node - rotation not found");
+    }
+    if (json.contains("scale"))
+    {
+        auto scale = json["scale"];
+        if (scale.size() == 2)
+        {
+            local_transform_.scale = {scale[0], scale[1]};
+        }
+    }
+    else
+    {
+        RLE_CORE_WARN("failed to load node - scale not found");
+    }
 }
 
 void rle::Node2D::Translate(Vector2 offset)

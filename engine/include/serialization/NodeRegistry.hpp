@@ -18,4 +18,5 @@ namespace rle
         std::unique_ptr<Node> CreateNode(const std::string& name) const;
         bool HasType(const std::string& name) const {return node_factories_.contains(name);}
     };
+    void RegisterNodeTypes();
 }

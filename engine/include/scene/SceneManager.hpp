@@ -32,8 +32,6 @@ namespace rle
         bool LoadScene(const std::string& path);
         void SaveScene(const std::string& path);
 
-        void CreateDefaultScene() {active_scene_ = std::make_unique<Scene>();}
-
         void SetScene(std::unique_ptr<Scene> scene);
         Scene* GetScene() {return active_scene_.get();}
         void SetActiveCamera(Node* camera);

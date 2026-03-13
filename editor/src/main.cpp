@@ -1,5 +1,5 @@
 #include <rlengine.hpp>
-#include "SandboxProject.hpp"
+#include "Sandbox.hpp"
 
 class EditorApplication : public rle::Application
 {
@@ -353,12 +353,6 @@ public:
         UnloadRenderTexture(viewport_);
     }
 };
-
-rle::Project* rle::GetProject()
-{
-    static SandboxProject project;
-    return &project;
-}
 
 int main()
 {

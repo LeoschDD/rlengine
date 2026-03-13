@@ -13,4 +13,6 @@ void rle::Log::Init()
 
     client_logger_ = spdlog::stdout_color_mt("APP");
     client_logger_->set_level(spdlog::level::trace);
+    
+    RLE_CORE_TRACE("initialized log");
 }

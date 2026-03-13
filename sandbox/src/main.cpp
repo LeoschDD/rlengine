@@ -1,11 +1,5 @@
 #include <rlengine.hpp>
-#include "SandboxProject.hpp"
-
-rle::Project* rle::GetProject()
-{
-    static SandboxProject project;
-    return &project;
-}
+#include "Sandbox.hpp"
 
 int main()
 {

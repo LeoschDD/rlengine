@@ -5,10 +5,18 @@ rle::Application* rle::Application::instance_ = nullptr;
 bool rle::Application::Init()
 {
     rle::Log::Init();
-    RLE_CORE_TRACE("initialized log");
+    if (!InitWindow()) return false;
+    rlImGuiSetup(true);
+    RegisterNodeTypes();
+    if (!InitScene()) return false;
 
+    return true;
+}
+
+bool rle::Application::InitWindow()
+{
     SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(1920, 1080, "Sandbox");
+    ::InitWindow(1920, 1080, "Sandbox");
     if (!IsWindowReady()) 
     {
         RLE_CORE_ERROR("window could not initialize");
@@ -19,27 +27,6 @@ bool rle::Application::Init()
         RLE_CORE_TRACE("initialized window");
     }
     SetTargetFPS(60);
-
-    rlImGuiSetup(true);
-
-    auto project = GetProject();
-
-    RegisterNodeTypes();
-    project->RegisterNodeTypes();
-    
-    if (!GetSceneManager().LoadScene(project->GetStartupScenePath()))
-    {
-        RLE_CORE_INFO("can't load scene - creating startup scene");
-        auto scene = project->CreateStartupScene();
-        if (!scene)
-        {
-            GetSceneManager().CreateDefaultScene();
-        }
-        else
-        {
-            GetSceneManager().SetScene(std::move(scene));
-        }
-    }
     return true;
 }
 
@@ -51,6 +38,29 @@ void rle::Application::RegisterNodeTypes()
     node_registry_.RegisterType("NodeMesh3D", [](){return std::make_unique<NodeMesh3D>();});
     node_registry_.RegisterType("NodeCamera3D", [](){return std::make_unique<NodeCamera3D>();});
     node_registry_.RegisterType("NodeCamera2D", [](){return std::make_unique<NodeCamera2D>();});
+
+    rle::RegisterNodeTypes();
+}
+
+bool rle::Application::InitScene()
+{
+    if (!GetSceneManager().LoadScene(SCENE_DIR "/main.rlscene"))
+    {
+        RLE_CORE_INFO("can't load main scene - creating main scene");
+        GetSceneManager().SetScene(std::make_unique<Scene>("main")); 
+    }
+    return true;
+}
+
+void rle::Application::Close()
+{
+    if (auto* scene = GetSceneManager().GetScene())
+    {
+        GetSceneManager().SaveScene(SCENE_DIR "/" + scene->GetName() + ".rlscene");
+    }
+    GetSceneManager().SetScene(nullptr);
+    
+    CloseWindow();
 }
 
 void rle::Application::Input()
@@ -85,13 +95,7 @@ rle::Application::Application()
 
 rle::Application::~Application()
 {
-    if (auto* scene = GetSceneManager().GetScene())
-    {
-        GetSceneManager().SaveScene(SCENE_DIR "/" + scene->GetName() + ".rlscene");
-    }
-    GetSceneManager().SetScene(nullptr);
-    
-    CloseWindow();
+    Close();
     instance_ = nullptr;
 }
 

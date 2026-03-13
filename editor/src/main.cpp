@@ -22,6 +22,13 @@ protected:
         EndTextureMode();
         bool open = true;
 
+        DrawViewport();
+        DrawNodeTree();
+		rlImGuiEnd();
+    };
+
+    void DrawViewport()
+    {
         if (ImGui::Begin("Viewport"))
         {
             ImVec2 avail = ImGui::GetContentRegionAvail();
@@ -34,9 +41,7 @@ protected:
             );
         }
         ImGui::End();
-        DrawNodeTree();
-		rlImGuiEnd();
-    };
+    }
 
     void DrawNodeTree()
     {

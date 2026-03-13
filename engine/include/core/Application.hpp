@@ -6,6 +6,8 @@
 #include "serialization/NodeRegistry.hpp"
 #include "core/Project.hpp"
 #include "resources/ResourceManager.hpp"
+#include "nodes/2D/Node2D.hpp"
+#include "nodes/3D/Node3D.hpp"
 
 namespace rle
 {
@@ -37,6 +39,7 @@ namespace rle
 
         void Run();
 
+        NodeRegistry& GetNodeRegistry() {return node_registry_;}
         SceneManager& GetSceneManager() {return scene_manager_;}
         ResourceManager& GetResourceManager() {return resource_manager_;}
     };

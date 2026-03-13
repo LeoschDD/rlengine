@@ -24,7 +24,7 @@ bool rle::Application::Init()
     auto project = GetProject();
 
     RegisterNodeTypes();
-    project->RegisterNodeTypes(node_registry_);
+    project->RegisterNodeTypes();
     
     if (!GetSceneManager().LoadScene(project->GetStartupScenePath()))
     {
@@ -45,6 +45,8 @@ bool rle::Application::Init()
 void rle::Application::RegisterNodeTypes()
 {
     node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
+    node_registry_.RegisterType("Node2D", [](){return std::make_unique<Node2D>();});
+    node_registry_.RegisterType("Node3D", [](){return std::make_unique<Node3D>();});
 }
 
 void rle::Application::Input()
@@ -60,10 +62,8 @@ void rle::Application::Update()
 
 void rle::Application::Render()
 {
-    BeginDrawing();
     ClearBackground(SKYBLUE);
     GetSceneManager().ProcessRender();
-    EndDrawing();
 }
 
 rle::Application::Application()
@@ -103,6 +103,9 @@ void rle::Application::Run()
 
         Input();
         Update();
+
+        BeginDrawing();
         Render();
+        EndDrawing();
     }
 }

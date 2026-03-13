@@ -6,8 +6,9 @@
 class SandboxProject : public rle::Project
 {
 public:
-    void RegisterNodeTypes(rle::NodeRegistry& registry) override
+    void RegisterNodeTypes() override
     {
+        auto& registry = rle::Application::Get().GetNodeRegistry();
         registry.RegisterType("PlayerNode", [](){return std::make_unique<PlayerNode>();});
     }
 

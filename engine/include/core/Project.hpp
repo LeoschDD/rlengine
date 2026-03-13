@@ -12,7 +12,7 @@ namespace rle
 
         virtual std::unique_ptr<rle::Scene> CreateStartupScene() = 0;
         virtual std::string GetStartupScenePath() const = 0;
-        virtual void RegisterNodeTypes(rle::NodeRegistry& node_registry) = 0;
+        virtual void RegisterNodeTypes() = 0;
     };
 
     Project* GetProject();

@@ -42,6 +42,37 @@ void rle::Node3D::UpdateGlobalTransform()
     transform_dirty_ = false;
 }
 
+void rle::Node3D::Serialize(nlohmann::ordered_json &json) const
+{
+    Vector3 pos = local_transform_.translation;
+    json["postion"] = {pos.x, pos.y, pos.z};
+
+    Quaternion rotation = local_transform_.rotation;
+    json["rotation"] = {rotation.x, rotation.y, rotation.z, rotation.w};
+
+    Vector3 scale = local_transform_.scale;
+    json["scale"] = {scale.x, scale.y, scale.z};
+}
+
+void rle::Node3D::Deserialize(const nlohmann::ordered_json &json)
+{
+    auto pos = json["position"];
+    if (pos.size() == 3)
+    {
+        local_transform_.translation = {pos[0], pos[1], pos[2]};        
+    }
+    auto rotation = json["rotation"];
+    if (rotation.size() == 4)
+    {
+        local_transform_.rotation = {rotation[0], rotation[1], rotation[2], rotation[3]};        
+    }
+    auto scale = json["scale"];
+    if (scale.size() == 3)
+    {
+        local_transform_.scale = {scale[0], scale[1], scale[2]};
+    }
+}
+
 void rle::Node3D::Translate(Vector3 offset)
 {
     local_transform_.translation = Vector3Add(local_transform_.translation, offset);

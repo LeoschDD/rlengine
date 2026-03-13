@@ -20,6 +20,9 @@ namespace rle
         void OnHierarchyChanged() override {MarkTransformDirty();}
 
     public:
+        virtual void Serialize(nlohmann::ordered_json& json) const;
+        virtual void Deserialize(const nlohmann::ordered_json& json);
+
         void SetTransform(Transform transform) {local_transform_ = transform; MarkTransformDirty();}
         void SetPosition(Vector3 position) {local_transform_.translation = position; MarkTransformDirty();}
         void SetRotation(Quaternion rotation) {local_transform_.rotation = rotation; MarkTransformDirty();}

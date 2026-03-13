@@ -16,6 +16,7 @@ private:
 
     bool show_save_dialog_{false};
     bool show_load_dialog_{false};
+    bool show_create_dialog_{false};
     char scene_name_buf_[128] = "main";
 
     std::unordered_map<uint32_t, std::string> add_child_type_;
@@ -91,6 +92,10 @@ protected:
                 {
                     show_load_dialog_ = true;
                 }
+                if (ImGui::MenuItem("Create Scene"))
+                {
+                    show_create_dialog_ = true;
+                }
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -108,6 +113,11 @@ protected:
         {
             ImGui::OpenPopup("Load Scene");
             show_load_dialog_ = false;
+        }
+        if (show_create_dialog_)
+        {
+            ImGui::OpenPopup("Create Scene");
+            show_create_dialog_ = false;
         }
 
         ImVec2 center = ImVec2((float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f);
@@ -150,6 +160,30 @@ protected:
                 add_child_type_.clear();
                 add_child_name_.clear();
                 GetSceneManager().LoadScene(path);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(400, 0));
+        if (ImGui::BeginPopupModal("Create Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::Text("Scene name:");
+            ImGui::SetNextItemWidth(-1);
+            ImGui::InputText("##create_name", scene_name_buf_, sizeof(scene_name_buf_));
+            ImGui::Spacing();
+
+            if (ImGui::Button("Create", ImVec2(120, 0)))
+            {
+                std::string path = std::string(SCENE_DIR) + "/" + scene_name_buf_ + ".rlscene";
+                GetSceneManager().SetScene(std::make_unique<rle::Scene>(scene_name_buf_));
+                GetSceneManager().SaveScene(path);
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SameLine();

@@ -23,7 +23,10 @@ void rle::SceneManager::ProcessRender()
     {
         active_scene_->Root()->Render();
         active_scene_->Root()->Render2D();
+
+        BeginMode3D(camera_3d_);
         active_scene_->Root()->Render3D();
+        EndMode3D();    
     }
 }
 

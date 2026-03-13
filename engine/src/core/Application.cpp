@@ -47,6 +47,7 @@ void rle::Application::RegisterNodeTypes()
     node_registry_.RegisterType("Node", [](){return std::make_unique<Node>();});
     node_registry_.RegisterType("Node2D", [](){return std::make_unique<Node2D>();});
     node_registry_.RegisterType("Node3D", [](){return std::make_unique<Node3D>();});
+    node_registry_.RegisterType("NodeMesh3D", [](){return std::make_unique<NodeMesh3D>();});
 }
 
 void rle::Application::Input()
@@ -86,6 +87,8 @@ rle::Application::~Application()
     {
         GetSceneManager().SaveScene(SCENE_DIR "/" + scene->GetName() + ".rlscene");
     }
+    GetSceneManager().SetScene(nullptr);
+    
     CloseWindow();
     instance_ = nullptr;
 }

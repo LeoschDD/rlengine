@@ -6,9 +6,18 @@ class EditorApplication : public rle::Application
 private:
     RenderTexture2D viewport_{};
     bool initialized_{false};
+    bool layout_set_{false};
     rle::Node* selected_node_{nullptr};
 
-    // Per-node add-child state keyed by node ID
+    ImVec2 viewport_pos_{};
+    ImVec2 viewport_size_{};
+    ImVec2 inspector_pos_{};
+    ImVec2 inspector_size_{};
+
+    bool show_save_dialog_{false};
+    bool show_load_dialog_{false};
+    char scene_name_buf_[128] = "main";
+
     std::unordered_map<uint32_t, std::string> add_child_type_;
     std::unordered_map<uint32_t, std::string> add_child_name_;
 
@@ -18,6 +27,15 @@ protected:
         if (!initialized_)
         {
             viewport_ = LoadRenderTexture(1280, 720);
+
+            ImGuiStyle& style = ImGui::GetStyle();
+            ImGui::StyleColorsDark();
+            style.WindowRounding = 0.0f;
+            style.FrameRounding = 4.0f;
+            style.FramePadding = ImVec2(8, 4);
+            style.WindowPadding = ImVec2(8, 8);
+            style.ItemSpacing = ImVec2(8, 6);
+
             initialized_ = true;
         }
         ClearBackground(DARKGRAY);
@@ -27,18 +45,128 @@ protected:
         rle::Application::Render();
         EndTextureMode();
 
-        DrawViewport();
+        DrawMenuBar();
+        SetupLayout();
         DrawNodeTree();
+        DrawViewport();
         DrawInspector();
-		rlImGuiEnd();
+        DrawFileDialog();
+        rlImGuiEnd();
     };
+
+    void SetupLayout()
+    {
+        if (layout_set_) return;
+        layout_set_ = true;
+
+        float screen_w = (float)GetScreenWidth();
+        float screen_h = (float)GetScreenHeight();
+        float menu_h = ImGui::GetFrameHeight();
+        float panel_w = screen_w * 0.2f;
+        float center_w = screen_w - panel_w * 2.0f;
+
+        viewport_pos_ = ImVec2(panel_w, menu_h);
+        viewport_size_ = ImVec2(center_w, screen_h - menu_h);
+
+        inspector_pos_ = ImVec2(panel_w + center_w, menu_h);
+        inspector_size_ = ImVec2(panel_w, screen_h - menu_h);
+    }
+
+    void DrawMenuBar()
+    {
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+                {
+                    if (auto* scene = GetSceneManager().GetScene())
+                    {
+                        strncpy(scene_name_buf_, scene->GetName().c_str(), sizeof(scene_name_buf_) - 1);
+                        show_save_dialog_ = true;
+                    }
+                }
+                if (ImGui::MenuItem("Load Scene", "Ctrl+L"))
+                {
+                    show_load_dialog_ = true;
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+    }
+
+    void DrawFileDialog()
+    {
+        if (show_save_dialog_)
+        {
+            ImGui::OpenPopup("Save Scene");
+            show_save_dialog_ = false;
+        }
+        if (show_load_dialog_)
+        {
+            ImGui::OpenPopup("Load Scene");
+            show_load_dialog_ = false;
+        }
+
+        ImVec2 center = ImVec2((float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f);
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(400, 0));
+        if (ImGui::BeginPopupModal("Save Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::Text("Scene name:");
+            ImGui::SetNextItemWidth(-1);
+            ImGui::InputText("##save_name", scene_name_buf_, sizeof(scene_name_buf_));
+            ImGui::Spacing();
+
+            if (ImGui::Button("Save", ImVec2(120, 0)))
+            {
+                std::string path = std::string(SCENE_DIR) + "/" + scene_name_buf_ + ".rlscene";
+                GetSceneManager().SaveScene(path);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(400, 0));
+        if (ImGui::BeginPopupModal("Load Scene", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::Text("Scene name:");
+            ImGui::SetNextItemWidth(-1);
+            ImGui::InputText("##load_name", scene_name_buf_, sizeof(scene_name_buf_));
+            ImGui::Spacing();
+
+            if (ImGui::Button("Load", ImVec2(120, 0)))
+            {
+                std::string path = std::string(SCENE_DIR) + "/" + scene_name_buf_ + ".rlscene";
+                selected_node_ = nullptr;
+                add_child_type_.clear();
+                add_child_name_.clear();
+                GetSceneManager().LoadScene(path);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+    }
 
     void DrawViewport()
     {
-        if (ImGui::Begin("Viewport"))
+        ImGui::SetNextWindowPos(viewport_pos_, ImGuiCond_Always);
+        ImGui::SetNextWindowSize(viewport_size_, ImGuiCond_Always);
+        if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
             ImVec2 avail = ImGui::GetContentRegionAvail();
-
             ImGui::Image(
                 (ImTextureID)(uintptr_t)viewport_.texture.id,
                 avail,
@@ -51,11 +179,16 @@ protected:
 
     void DrawNodeTree()
     {
-        bool open = true;
-		if (ImGui::Begin("Nodes", &open))
-		{
+        float screen_w = (float)GetScreenWidth();
+        float screen_h = (float)GetScreenHeight();
+        float menu_h = ImGui::GetFrameHeight();
+
+        ImGui::SetNextWindowPos(ImVec2(0, menu_h), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(screen_w * 0.2f, screen_h - menu_h), ImGuiCond_Always);
+        if (ImGui::Begin("Nodes", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+        {
             DrawNodesRecursive(GetSceneManager().GetScene()->Root());
-		}
+        }
         ImGui::End();
     }
 
@@ -78,7 +211,6 @@ protected:
         {
             uint32_t nid = node->GetId();
 
-            // Ensure buffers exist for this node
             if (add_child_type_.find(nid) == add_child_type_.end())
                 add_child_type_[nid] = "Node";
             if (add_child_name_.find(nid) == add_child_name_.end())
@@ -86,7 +218,6 @@ protected:
 
             ImGui::PushID(nid);
 
-            // Type input
             ImGui::SetNextItemWidth(100);
             char type_buf[128];
             strncpy(type_buf, add_child_type_[nid].c_str(), sizeof(type_buf) - 1);
@@ -96,7 +227,6 @@ protected:
 
             ImGui::SameLine();
 
-            // Name input
             ImGui::SetNextItemWidth(100);
             char name_buf[128];
             strncpy(name_buf, add_child_name_[nid].c_str(), sizeof(name_buf) - 1);
@@ -106,7 +236,6 @@ protected:
 
             ImGui::SameLine();
 
-            // Add child button
             if (ImGui::Button("Add Child"))
             {
                 auto& registry = GetNodeRegistry();
@@ -120,7 +249,6 @@ protected:
                 }
             }
 
-            // Remove button (not for root)
             if (node->GetParent())
             {
                 ImGui::SameLine();
@@ -147,7 +275,9 @@ protected:
 
     void DrawInspector()
     {
-        if (ImGui::Begin("Inspector"))
+        ImGui::SetNextWindowPos(inspector_pos_, ImGuiCond_Always);
+        ImGui::SetNextWindowSize(inspector_size_, ImGuiCond_Always);
+        if (ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
             if (selected_node_)
             {
@@ -155,7 +285,6 @@ protected:
                 ImGui::Text("Type: %s", selected_node_->GetTypeName().c_str());
                 ImGui::Separator();
 
-                // Check if it's a Node3D
                 if (auto* node3d = dynamic_cast<rle::Node3D*>(selected_node_))
                 {
                     auto transform = node3d->GetLocalTransform();
@@ -164,7 +293,6 @@ protected:
                     if (ImGui::DragFloat3("Position", pos, 0.1f))
                         node3d->SetPosition({pos[0], pos[1], pos[2]});
 
-                    // Show rotation as euler angles
                     Vector3 euler = QuaternionToEuler(transform.rotation);
                     float rot[3] = {euler.x * RAD2DEG, euler.y * RAD2DEG, euler.z * RAD2DEG};
                     if (ImGui::DragFloat3("Rotation", rot, 1.0f))
@@ -178,7 +306,6 @@ protected:
                         node3d->SetScale({scl[0], scl[1], scl[2]});
                 }
 
-                // Check if it's a Node2D
                 if (auto* node2d = dynamic_cast<rle::Node2D*>(selected_node_))
                 {
                     auto transform = node2d->GetLocalTransform();
@@ -198,7 +325,7 @@ protected:
             }
             else
             {
-                ImGui::Text("No node selected.");
+                ImGui::TextDisabled("No node selected.");
             }
         }
         ImGui::End();

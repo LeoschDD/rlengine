@@ -4,6 +4,58 @@
         "type": "Node",
         "id": 0,
         "name": "Root",
-        "children": []
+        "children": [
+            {
+                "type": "NodeMesh3D",
+                "id": 1,
+                "name": "Node_1",
+                "position": [
+                    5.0,
+                    0.0,
+                    1.0
+                ],
+                "rotation": [
+                    0.24310621619224548,
+                    0.4139534533023834,
+                    -0.08963010460138321,
+                    0.8726445436477661
+                ],
+                "scale": [
+                    1.0,
+                    2.0,
+                    2.0
+                ],
+                "children": [
+                    {
+                        "type": "Node",
+                        "id": 2,
+                        "name": "Node_2",
+                        "children": []
+                    },
+                    {
+                        "type": "NodeMesh3D",
+                        "id": 3,
+                        "name": "Node_3",
+                        "position": [
+                            0.0,
+                            0.0,
+                            4.0
+                        ],
+                        "rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "children": []
+                    }
+                ]
+            }
+        ]
     }
 }

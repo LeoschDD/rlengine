@@ -1,4 +1,5 @@
-#include "Sandbox.hpp"
+#include <rlengine.hpp>
+#include "PlayerNode.hpp"
 
 void rle::RegisterNodeTypes()
 {

@@ -7,7 +7,7 @@ file(GLOB_RECURSE
 )
 
 list(REMOVE_ITEM 
-    SANDBOX_PROJECT_SRC "src/main.cpp"
+    SANDBOX_PROJECT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
 )
 
 target_sources(sandbox_project
@@ -20,7 +20,10 @@ target_include_directories(sandbox_project
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(sandbox_project PUBLIC rlengine)
+target_link_libraries(sandbox_project 
+    PUBLIC 
+        rlengine
+)
 
 target_compile_definitions(sandbox_project 
     PUBLIC
@@ -33,5 +36,6 @@ add_executable(sandbox src/main.cpp)
 
 target_link_libraries(sandbox
     PRIVATE
+        rlengine
         sandbox_project
 )

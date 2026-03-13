@@ -27,6 +27,7 @@ protected:
         if (!initialized_)
         {
             viewport_ = LoadRenderTexture(1280, 720);
+            SetTextureFilter(viewport_.texture, TEXTURE_FILTER_BILINEAR);
 
             ImGuiStyle& style = ImGui::GetStyle();
             ImGui::StyleColorsDark();
@@ -167,6 +168,13 @@ protected:
         if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
             ImVec2 avail = ImGui::GetContentRegionAvail();
+            int w = (int)avail.x, h = (int)avail.y;
+            if (w > 0 && h > 0 && (w != viewport_.texture.width || h != viewport_.texture.height))
+            {
+                UnloadRenderTexture(viewport_);
+                viewport_ = LoadRenderTexture(w, h);
+                SetTextureFilter(viewport_.texture, TEXTURE_FILTER_BILINEAR);
+            }
             ImGui::Image(
                 (ImTextureID)(uintptr_t)viewport_.texture.id,
                 avail,

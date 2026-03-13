@@ -1,23 +1,19 @@
 #include <rlengine.hpp>
 
-class PlayerNode : public rle::Node
+class PlayerNode : public rle::NodeMesh3D
 {
 private:
-    Vector3 position {0.0f, 0.0f, 0.0f};
 
 public:
-    PlayerNode() : rle::Node("Player") {}
-    void Serialize(nlohmann::ordered_json& json) const override
-    {
-        rle::Node::Serialize(json);
-        json["position"] = {position.x, position.y, position.z};
-    }
-    void Deserialize(const nlohmann::ordered_json& json) override
-    {
-        rle::Node::Deserialize(json);
-        position.x = json["position"][0];
-        position.y = json["position"][1];
-        position.z = json["position"][2];
-    }
+    PlayerNode() = default;
+    
     std::string GetTypeName() const override {return "PlayerNode";}
+
+    void OnUpdate(const float dt) override
+    {
+        if (IsKeyDown(KEY_W)) Translate(Vector3Scale(GetForward(), dt));
+        if (IsKeyDown(KEY_S)) Translate(Vector3Scale(GetForward(), -dt));
+        if (IsKeyDown(KEY_D)) Translate(Vector3Scale(GetRight(), dt));
+        if (IsKeyDown(KEY_A)) Translate(Vector3Scale(GetRight(), -dt));
+    }
 };  
